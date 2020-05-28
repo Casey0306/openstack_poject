@@ -1,7 +1,9 @@
-import requests, json
+import requests
+import json
 from config import Config
 
 env_var = Config()
+
 
 class Openstackapi:
 
@@ -35,7 +37,7 @@ class Openstackapi:
                                     }
                                 }
                              }
-                    }
+                        }
 
         payload = json.dumps(payload_dict)
         try:
@@ -45,7 +47,6 @@ class Openstackapi:
             return json.loads(response.text.encode('utf8'))
 
         return self.token
-
 
     def check_token_status(self):
         url = "http://" + self.ip_api + "/identity/v3/projects"
@@ -61,7 +62,6 @@ class Openstackapi:
                 return 0
         except Exception:
             return response.text.encode('utf8')
-
 
     def get_images(self):
         dict_images = {}
@@ -80,7 +80,6 @@ class Openstackapi:
             return {"error": "no available to take images"}
 
         return dict_images
-
 
     def get_flavors(self):
 
@@ -102,7 +101,6 @@ class Openstackapi:
 
         return dict_flavors
 
-
     def get_networks(self):
         dict_networks = {}
         list_networks = []
@@ -121,7 +119,6 @@ class Openstackapi:
             return json.loads(response.text.encode('utf8'))
 
         return dict_networks
-
 
     def get_vms(self):
         dict_vms = {}
@@ -143,7 +140,6 @@ class Openstackapi:
 
         return dict_vms
 
-
     def create_vm(self, vm_name, image_id, flavor_href, networks_id_list):
         payload_dict = {
                           "server": {
@@ -162,4 +158,5 @@ class Openstackapi:
         url = "http://" + self.ip_api + "/compute/v2.1/servers"
         payload = json.dumps(payload_dict)
         response = requests.request("POST", url, headers=headers, data=payload)
+
         return response.status_code

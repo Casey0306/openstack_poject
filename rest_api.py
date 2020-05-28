@@ -36,47 +36,64 @@ def login():
 
     if not auth or not auth.username or not auth.password:
         return make_response('Could not verify', 401,
-                             {'WWW-Authenticate':'Basic realm="Login required!"'})
+                             {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
     response = openstackapi.auth_keystone(auth.username, auth.password)
 
     if openstackapi.token:
-        return jsonify({"token": response})
+        return jsonify({"token": response}), openstackapi.status_code
     else:
         return make_response('Could not verify', 401,
-                             {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+                             {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
 
 @app.route('/flavors', methods=['GET'])
 @token_check
 def flavors():
     response = openstackapi.get_flavors()
-    return jsonify(response)
+    if openstackapi.status_code == 200:
+        return jsonify(response), openstackapi.status_code
+    else:
+        return jsonify({"Error": "Error to get flavors"}), openstackapi.status_code
 
 
 @app.route('/images', methods=['GET'])
 @token_check
 def images():
     response = openstackapi.get_images()
-    return jsonify(response)
+    if openstackapi.status_code == 200:
+        return jsonify(response), openstackapi.status_code
+    else:
+        return jsonify({"Error": "Error to get images"}), openstackapi.status_code
 
 
 @app.route('/networks', methods=['GET'])
 @token_check
 def networks():
     response = openstackapi.get_networks()
-    return jsonify(response)
+    if openstackapi.status_code == 200:
+        return jsonify(response), openstackapi.status_code
+    else:
+        return jsonify({"Error": "Error to get networks"}), openstackapi.status_code
 
 
 @app.route('/servers', methods=['GET'])
 @token_check
 def servers():
     response = openstackapi.get_vms()
-    return jsonify(response)
+    if openstackapi.status_code == 200:
+        return jsonify(response), openstackapi.status_code
+    else:
+        return jsonify({"Error": "Error to get servers"}), openstackapi.status_code
 
 
-#@app.route('/server/<server_id>', methods=['GET'])
-#def server():
+@app.route('/server/<server_id>', methods=['GET'])
+def server(server_id):
+    response = openstackapi.get_vm(server_id)
+    if openstackapi.status_code == 200:
+        return jsonify(response), openstackapi.status_code
+    else:
+        return jsonify({"Error": "Error to get servers"}), openstackapi.status_code
 
 
 @app.route('/create_server', methods=['POST'])
@@ -85,7 +102,7 @@ def create_server():
     data = request.get_json()
     response = openstackapi.create_vm(data["name"], data["image_id"],
                                       data["flavor_ref"], data["networks_id_list"])
-    return jsonify({"status-code": response})
+    return jsonify({"status-code": response}), openstackapi.status_code
 
 
 if __name__ == '__main__':

@@ -41,7 +41,7 @@ def login():
     openstackapi.token = ""
     response = openstackapi.auth_keystone(auth.username, auth.password)
 
-    if openstackapi.token:
+    if openstackapi.token != "":
         return jsonify({"token": response}), openstackapi.status_code
     else:
         return make_response('Could not verify', 401,

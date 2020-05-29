@@ -4,7 +4,7 @@
 #Authentication api, get token#
 
 request: 
-curl -u admin:P@sswordOpenSt@ck http://31.41.155.28/login
+curl -u username:password http://31.41.155.28/login
 
 response:
 {

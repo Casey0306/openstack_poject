@@ -38,6 +38,7 @@ def login():
         return make_response('Could not verify', 401,
                              {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
+    openstackapi.token = ""
     response = openstackapi.auth_keystone(auth.username, auth.password)
 
     if openstackapi.token:
@@ -88,6 +89,7 @@ def servers():
 
 
 @app.route('/server/<server_id>', methods=['GET'])
+@token_check
 def server(server_id):
     response = openstackapi.get_vm(server_id)
     if openstackapi.status_code == 200:

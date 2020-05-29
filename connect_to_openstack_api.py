@@ -43,9 +43,9 @@ class Openstackapi:
 
         payload = json.dumps(payload_dict)
         response = requests.request("POST", url, headers=headers, data=payload)
+        self.status_code = response.status_code
         try:
             self.token = response.headers['X-Subject-Token']
-            self.status_code = response.status_code
         except Exception:
             return {"Error": "No auth there is no token"}
 

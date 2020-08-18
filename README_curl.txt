@@ -3,7 +3,7 @@
 
 ***#Authentication api, get token#!!!
 
-request: 
+!request:
 curl -u username:password http://31.41.155.28/login
 
 response:
